@@ -1,6 +1,4 @@
 # Time Investment
-  
-<!DOCTYPE html>
 
 <form>
     <label>
