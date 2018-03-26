@@ -74,22 +74,80 @@
 
     <script type="text/javascript">
 
+        let show;
+
+        function getImage(imageUri) {
+
+            let imageUrl = 'http://image.tmdb.org/t/p/w185' + imageUri;
+
+            // let data = "{}";
+            // let xhr = new XMLHttpRequest();
+            //
+            // xhr.addEventListener("readystatechange", function () {
+            //   if (this.readyState === this.DONE) {
+            //
+            //     console.log(JSON.parse(this.response));
+            //     let res = JSON.parse(this.response);
+            //
+            //     let show = document.createElement('div');
+            //     show.setAttribute('style',resultDivStyle);
+            //     show.innerHTML = '<strong>Name</strong>: ' + res.results[i].name + '<br>'
+            //                        + '<strong>Summary</strong>: ' + res.results[i].overview + '<br>';
+            //     element.appendChild(show);
+            //   }
+            // });
+            //
+            // xhr.open("GET", nameApiUrl);
+            //
+            // xhr.send(data);
+
+            let image = document.createElement('img');
+            image.setAttribute('src',imageUrl);
+            show.appendChild(image);
+        }
+
         function getSeries() {
 
             let nameOfSeries = document.getElementById('name').value;
-            let inputDiv = document.getElementById('input').value;
-            let resultDiv = document.getElementById('result').value;
+            let inputDiv = document.getElementById('input');
+            let resultDiv = document.getElementById('result');
             let nameApiUrl = 'https://api.themoviedb.org/3/search/tv?api_key=c3b10b85e7b9f342239ab6fd3a6fea88&language=en-US&page=1&query='
                                 + nameOfSeries;
-            // let idApiUrl = 'https://api.themoviedb.org/3/tv/' + id + '?api_key=c3b10b85e7b9f342239ab6fd3a6fea88&language=en-US'
+
+            let resultDivStyle = `
+                                     display: block;
+                                     margin: 30px auto 30px;
+                                     width: 800px;
+                                     padding: 20px;
+                                     border: 2px solid #7b68ee;
+
+                                     text-align: center;
+                                     color: #000;
+                                     font: 400 18px/22px Helvetica, Arial, sans-serif;`;
+
 
             let data = "{}";
             let xhr = new XMLHttpRequest();
-            xhr.withCredentials = true;
 
             xhr.addEventListener("readystatechange", function () {
               if (this.readyState === this.DONE) {
-                console.log(this.responseText);
+
+                inputDiv.style.visibility = 'hidden';
+                resultDiv.style.visibility = 'visible';
+                console.log(JSON.parse(this.response));
+
+                let res = JSON.parse(this.response);
+
+                for(let i = 0; i < res.total_results; ++i) {
+
+                    show = document.createElement('div');
+                    show.setAttribute('style',resultDivStyle);
+                    show.innerHTML = '<strong>Name</strong>: ' + res.results[i].name + '<br>'
+                                   + '<strong>Summary</strong>: ' + res.results[i].overview + '<br>';
+                    resultDiv.appendChild(show);
+
+                    getImage(res.results[i].poster_path);
+                }
               }
             });
 
