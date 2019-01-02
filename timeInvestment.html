@@ -1,0 +1,194 @@
+<!DOCTYPE html>
+
+<html>
+
+    <head>
+        <title>Time Investment</title>
+        <meta charset="utf-8">
+
+        <style>
+
+            .box
+            {
+                -webkit-box-sizing: border-box;
+                    -moz-box-sizing: border-box;
+                        -box-sizing: border-box;
+                display: block;
+            }
+
+            .shadow-box
+            {
+                box-shadow: 0 4px 8px 0 rgba(0,0,0,0.2),
+                            0 6px 20px 0 rgba(0,0,0,0.2);
+            }
+
+            .text
+            {
+                text-align: center;
+                color: #000;
+                font: 400 18px/22px Helvetica, Arial, sans-serif;
+            }
+
+            .series-name
+            {
+                font: bold 24px/24px Helvetica, Arial, sans-serif;
+                padding: 0;
+                border: 2px solid #7b68ee;
+            }
+
+            .series-image
+            {
+                display: inline-block;
+                width: 25%;
+                border: 2px solid #7b68ee;
+            }
+
+            .series-content
+            {
+                display: inline-block;
+                width: 60%;
+                text-align: left;
+                color: #000;
+                font: normal 18px/22px Helvetica, Arial, sans-serif;
+                /*padding: 30px; */
+                border: 2px solid #7b68ee;
+            }
+
+        </style>
+
+    </head>
+
+    <body>
+        <section>
+            <div id="input" class="box shadow-box"
+                        style="
+                                 margin: 180px auto;
+                                 width: 700px;
+                                 height: 250px;
+                                 padding: 30px;
+                                 visibility: visible;
+                               " >
+
+                <form>
+                    <input type="text" class="text" placeholder="Which television series?" id="name" required
+                            style="
+                                    display: block;
+                                    height: 30px;
+                                    width: 500px;
+                                    margin: 30px auto 30px;
+                                    padding: 10px;
+                                    /* border: 2px solid #7b68ee; */
+                                    " />
+
+                    <input type="button" class="text" onclick="getSeries()" value="Show Time"
+                            style="
+                                    display: block;
+                                    margin: 30px auto 30px;
+                                    height: 50px;
+                                    width: 200px;
+                                    padding: 10px;
+                                    border: 2px solid #7b68ee;
+                                    color: #fff;
+                                    background: #7b68ee;
+                                    " />
+                </form>
+            </div>
+        </section>
+
+        <div id="result" class="box shadow-box"
+                style="
+                        position: absolute;
+                        top: 180px;
+                        left: 100px;
+                        width: 1000px;
+                        padding: 30px;
+                        visibility: hidden;
+               " >
+
+        </div>
+
+    </body>
+
+    <script type="text/javascript">
+
+        let show;
+
+        function getDetails(imageUri, n) {
+            let imageUrl = 'http://image.tmdb.org/t/p/w185' + imageUri;
+            // let data = "{}";
+            // let xhr = new XMLHttpRequest();
+            //
+            // xhr.addEventListener("readystatechange", function () {
+            //   if (this.readyState === this.DONE) {
+            //
+            //     console.log(JSON.parse(this.response));
+            //     let res = JSON.parse(this.response);
+            //
+            //     let show = document.createElement('div');
+            //     show.setAttribute('style',resultDivStyle);
+            //     show.innerHTML = '<strong>Name</strong>: ' + res.results[i].name + '<br>'
+            //                        + '<strong>Summary</strong>: ' + res.results[i].overview + '<br>';
+            //     element.appendChild(show);
+            //   }
+            // });
+            //
+            // xhr.open("GET", nameApiUrl);
+            //
+            // xhr.send(data);
+            let image = document.createElement('img');
+            let content = document.getElementById("content"+n);
+            image.setAttribute('src',imageUrl);
+            image.setAttribute('class','series-image');
+            content.appendChild(image);
+        }
+
+        function getSeries() {
+            let nameOfSeries = document.getElementById('name').value;
+            let inputDiv = document.getElementById('input');
+            let resultDiv = document.getElementById('result');
+            let nameApiUrl = 'https://api.themoviedb.org/3/search/tv?api_key=c3b10b85e7b9f342239ab6fd3a6fea88&language=en-US&page=1&query='
+                                + nameOfSeries;
+            let resultDivStyle = `
+                                     display: block;
+                                     margin: 30px auto 30px;
+                                     width: 800px;
+                                     padding: 30px;
+                                     border: 2px solid #7b68ee;
+                                     text-align: center;    `;
+
+            let data = "{}";
+            let xhr = new XMLHttpRequest();
+
+            xhr.addEventListener("readystatechange", function () {
+
+              if (this.readyState === this.DONE) {
+                inputDiv.style.visibility = 'hidden';
+                resultDiv.style.visibility = 'visible';
+                console.log(JSON.parse(this.response));
+                let res = JSON.parse(this.response);
+
+                for(let i = 0; i < res.total_results; ++i) {
+                    show = document.createElement('div');
+                    show.setAttribute('style',resultDivStyle);
+                    show.innerHTML = "<div id='content" + i + "' class='series-content'><div class='series-name'>"
+                                            + res.results[i].name +
+                                        "</div>"
+                                            + res.results[i].overview +
+                                    '</div>';
+
+                    resultDiv.appendChild(show);
+
+                    let imageUrl = 'http://image.tmdb.org/t/p/w185/' + res.results[i].poster_path;
+                    let image = document.createElement('img');
+                    image.setAttribute('src',imageUrl);
+                    image.setAttribute('class','series-image');
+                    show.appendChild(image);
+                }
+              }
+            });
+            xhr.open("GET", nameApiUrl);
+            xhr.send(data);
+        }
+    </script>
+
+</html>
