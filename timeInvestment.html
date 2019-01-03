@@ -117,33 +117,35 @@
 
         let show;
 
-        function getDetails(imageUri, n) {
-            let imageUrl = 'http://image.tmdb.org/t/p/w185' + imageUri;
-            // let data = "{}";
-            // let xhr = new XMLHttpRequest();
-            //
-            // xhr.addEventListener("readystatechange", function () {
-            //   if (this.readyState === this.DONE) {
-            //
-            //     console.log(JSON.parse(this.response));
-            //     let res = JSON.parse(this.response);
-            //
-            //     let show = document.createElement('div');
-            //     show.setAttribute('style',resultDivStyle);
-            //     show.innerHTML = '<strong>Name</strong>: ' + res.results[i].name + '<br>'
-            //                        + '<strong>Summary</strong>: ' + res.results[i].overview + '<br>';
-            //     element.appendChild(show);
-            //   }
-            // });
-            //
-            // xhr.open("GET", nameApiUrl);
-            //
-            // xhr.send(data);
-            let image = document.createElement('img');
-            let content = document.getElementById("content"+n);
-            image.setAttribute('src',imageUrl);
-            image.setAttribute('class','series-image');
-            content.appendChild(image);
+        function getTime(id) {
+            let url = 'https://api.themoviedb.org/3/tv/' + id + '?api_key=c3b10b85e7b9f342239ab6fd3a6fea88&language=en-US';
+
+            let data = "{}";
+            let xhr = new XMLHttpRequest();
+
+            xhr.addEventListener("readystatechange", function () {
+                if (this.readyState === this.DONE) {
+                    console.log(JSON.parse(this.response));
+
+                    response = JSON.parse(this.response);
+
+                    no_of_episodes = response.number_of_episodes;
+                    episode_run_time = response.episode_run_time;
+                    avg_episode_run_time = 0;
+
+                    for(let i=0; i<episode_run_time.length; ++i)
+                        avg_episode_run_time += episode_run_time[i];
+
+                    avg_episode_run_time /= episode_run_time.length;
+                    console.log(avg_episode_run_time);
+
+                    hours_required = avg_episode_run_time * no_of_episodes / 60;
+                    console.log(hours_required);
+              }
+            });
+
+            xhr.open("GET", url);
+            xhr.send(data);
         }
 
         function getSeries() {
@@ -187,6 +189,8 @@
                     image.setAttribute('src',imageUrl);
                     image.setAttribute('class','series-image');
                     show.appendChild(image);
+
+                    getTime(res.results[i].id);
                 }
               }
             });
