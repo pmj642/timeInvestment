@@ -5,70 +5,139 @@
     <head>
         <title>Time Investment</title>
         <meta charset="utf-8">
+        <link href='http://fonts.googleapis.com/css?family=Lato:400,700' rel='stylesheet' type='text/css'>
+
+        <style>
+
+            .box
+            {
+                -webkit-box-sizing: border-box;
+                    -moz-box-sizing: border-box;
+                        -box-sizing: border-box;
+                display: block;
+            }
+
+            .shadow-box
+            {
+                box-shadow: 0 4px 8px 0 rgba(0,0,0,0.2),
+                            0 6px 20px 0 rgba(0,0,0,0.2);
+            }
+
+            .input-text
+            {
+                text-align: center;
+                color: #000;
+                font: 400 18px/22px 'Lato', Helvetica, Arial, sans-serif;
+            }
+
+            .series-name
+            {
+                font: bold 36px/40px 'Lato', Helvetica, Arial, sans-serif;
+                margin-bottom: 10px;
+            }
+
+            .series-image
+            {
+                display: inline-block;
+                width: 25%;
+                height: inherit;
+                min-height: 310px;
+                border: 2px solid #000;
+                vertical-align: middle;
+            }
+
+            .series-content
+            {
+                display: inline-block;
+                width: 70%;
+                margin-right: 20px;
+                text-align: left;
+                color: #000;
+                vertical-align: top;
+            }
+
+            .text-offset
+            {
+                font: 700 24px/28px 'Lato', Helvetica, Arial, sans-serif;
+                text-align: center;
+            }
+
+            .series-overview
+            {
+                font: 400 16px/20px 'Lato', Helvetica, Arial, sans-serif;
+                margin: 0;
+            }
+
+            .meta
+            {
+                font: 400 20px/22px 'Lato', Helvetica, Arial, sans-serif;
+                margin-bottom: 15px;
+                color: #496074;
+            }
+
+            .meta span
+            {
+                color: #000;
+            }
+
+            .show
+            {
+                display: block;
+                margin: 0 auto 30px;
+                width: 850px;
+                padding: 30px;
+                text-align: center;
+                border: 1px solid #000;
+            }
+
+            .resultDiv
+            {
+                margin: 60px auto;
+                width: 1000px;
+                padding: 30px;
+             }
+
+             input
+             {
+                 display: block;
+                 margin: 30px auto 30px;
+                 padding: 10px;
+             }
+
+        </style>
+
     </head>
 
     <body>
-        <form>
-            <div id="input" style="
-                         -webkit-box-sizing: border-box;
-                            -moz-box-sizing: border-box;
-                                 box-sizing: border-box;
-                         display: block;
-                         margin: 180px auto;
-                         width: 700px;
-                         height: 250px;
-                         padding: 30px;
-                         box-shadow: 0 4px 8px 0 rgba(0,0,0,0.2),
-                                     0 6px 20px 0 rgba(0,0,0,0.2);
+        <section id="tv-series">
+            <div id="input" class="box shadow-box"
+                        style="
+                                 margin: 180px auto;
+                                 width: 700px;
+                                 height: 250px;
+                                 padding: 30px;
+                               " >
 
-                         visibility: visible;
-                   " >
+                <form onsubmit="getSeries()">
+                    <input type="text" class="input-text" placeholder="Which television series?" id="name" required
+                            style="
+                                    height: 30px;
+                                    width: 500px;
+                                    border: 1px solid #7b68ee;
+                                    " />
 
-                <input placeholder="Which television series?" id="name" type="input" required
-                       style="  display: block;
-                                height: 30px;
-                                width: 500px;
-                                margin: 30px auto 30px;
-                                padding: 10px;
-                                border: 2px solid #7b68ee;
-
-                                text-align: center;
-                                color: #7b68ee;
-                                font: 400 18px/22px Helvetica, Arial, sans-serif;
-                              " />
-
-                  <input type="button" onclick="getSeries()" value="Show Time"
-                         style="  display: block;
-                                  margin: 30px auto 30px;
-                                  height: 50px;
-                                  width: 200px;
-                                  padding: 10px;
-                                  border: 2px solid #7b68ee;
-
-                                  text-align: center;
-                                  background: #7b68ee;
-                                  color: #fff;
-                                  font: 400 18px/22px Helvetica, Arial, sans-serif;
-                                " />
-
+                    <input type="button" class="input-text" onclick="getSeries()" value="Show Time"
+                            style="
+                                    height: 50px;
+                                    width: 200px;
+                                    border: 2px solid #7b68ee;
+                                    color: #fff;
+                                    background: #7b68ee;
+                                    " />
+                </form>
             </div>
-        </form>
 
-        <div id="result" style="
-                     -webkit-box-sizing: border-box;
-                        -moz-box-sizing: border-box;
-                             box-sizing: border-box;
-                     display: block;
-                     margin: 180px auto;
-                     width: 1000px;
-                     padding: 30px;
-                     box-shadow: 0 4px 8px 0 rgba(0,0,0,0.2),
-                                 0 6px 20px 0 rgba(0,0,0,0.2);
-
-                     visibility: hidden;
-               " >
-
-        </div>
+        </section>
 
     </body>
 
@@ -76,86 +145,94 @@
 
         let show;
 
-        function getImage(imageUri) {
+        function getTime(id, i) {
+            let url = 'https://api.themoviedb.org/3/tv/' + id + '?api_key=c3b10b85e7b9f342239ab6fd3a6fea88&language=en-US';
 
-            let imageUrl = 'http://image.tmdb.org/t/p/w185' + imageUri;
+            let data = "{}";
+            let xhr = new XMLHttpRequest();
+            let meta = document.getElementById('content' + i).getElementsByClassName('meta')[0];
 
-            // let data = "{}";
-            // let xhr = new XMLHttpRequest();
-            //
-            // xhr.addEventListener("readystatechange", function () {
-            //   if (this.readyState === this.DONE) {
-            //
-            //     console.log(JSON.parse(this.response));
-            //     let res = JSON.parse(this.response);
-            //
-            //     let show = document.createElement('div');
-            //     show.setAttribute('style',resultDivStyle);
-            //     show.innerHTML = '<strong>Name</strong>: ' + res.results[i].name + '<br>'
-            //                        + '<strong>Summary</strong>: ' + res.results[i].overview + '<br>';
-            //     element.appendChild(show);
-            //   }
-            // });
-            //
-            // xhr.open("GET", nameApiUrl);
-            //
-            // xhr.send(data);
+            xhr.addEventListener("readystatechange", function () {
+                if (this.readyState === this.DONE) {
+                    console.log(JSON.parse(this.response));
 
-            let image = document.createElement('img');
-            image.setAttribute('src',imageUrl);
-            show.appendChild(image);
+                    response = JSON.parse(this.response);
+
+                    no_of_episodes = response.number_of_episodes;
+                    episode_run_time = response.episode_run_time;
+                    vote_avg = response.vote_average;
+                    vote_count = response.vote_count;
+
+                    avg_episode_run_time = 0;
+
+                    for(let i=0; i<episode_run_time.length; ++i)
+                        avg_episode_run_time += episode_run_time[i];
+
+                    avg_episode_run_time /= episode_run_time.length;
+                    console.log(avg_episode_run_time);
+
+                    hours_required = Math.ceil(avg_episode_run_time * no_of_episodes / 60);
+                    console.log(hours_required);
+
+                    meta.innerHTML = "Time: <span> <span class='text-offset'>" + hours_required + "</span> Hrs </span>"
+                                    + "<br>Votes: <span> <span class='text-offset'>" + vote_avg + "</span> (" + vote_count + ") </span>";
+              }
+            });
+
+            xhr.open("GET", url);
+            xhr.send(data);
         }
 
         function getSeries() {
-
             let nameOfSeries = document.getElementById('name').value;
             let inputDiv = document.getElementById('input');
-            let resultDiv = document.getElementById('result');
             let nameApiUrl = 'https://api.themoviedb.org/3/search/tv?api_key=c3b10b85e7b9f342239ab6fd3a6fea88&language=en-US&page=1&query='
                                 + nameOfSeries;
+            let tvSeries = document.getElementById('tv-series');
 
-            let resultDivStyle = `
-                                     display: block;
-                                     margin: 30px auto 30px;
-                                     width: 800px;
-                                     padding: 20px;
-                                     border: 2px solid #7b68ee;
+            let resultDiv = document.createElement('div');
+            resultDiv.setAttribute('class','box shadow-box resultDiv');
+            resultDiv.setAttribute('id','result');
+            resultDiv.innerHTML = "";
 
-                                     text-align: center;
-                                     color: #000;
-                                     font: 400 18px/22px Helvetica, Arial, sans-serif;`;
-
+            tvSeries.appendChild(resultDiv);
+            inputDiv.parentNode.removeChild(inputDiv);
 
             let data = "{}";
             let xhr = new XMLHttpRequest();
 
             xhr.addEventListener("readystatechange", function () {
+
               if (this.readyState === this.DONE) {
 
-                inputDiv.style.visibility = 'hidden';
-                resultDiv.style.visibility = 'visible';
                 console.log(JSON.parse(this.response));
-
                 let res = JSON.parse(this.response);
 
                 for(let i = 0; i < res.total_results; ++i) {
+                    let show = document.createElement('div');
+                    show.setAttribute('class','show');
+                    show.innerHTML = "<div id='content" + i + "' class='series-content'><div class='series-name'>"
+                                            + res.results[i].name +
+                                        "</div> <div class='meta'></div> <p class='series-overview'>"
+                                            + res.results[i].overview +
+                                    '</p></div>';
 
-                    show = document.createElement('div');
-                    show.setAttribute('style',resultDivStyle);
-                    show.innerHTML = '<strong>Name</strong>: ' + res.results[i].name + '<br>'
-                                   + '<strong>Summary</strong>: ' + res.results[i].overview + '<br>';
                     resultDiv.appendChild(show);
 
-                    getImage(res.results[i].poster_path);
+                    let imageUrl = 'http://image.tmdb.org/t/p/w185/' + res.results[i].poster_path;
+                    let image = document.createElement('img');
+                    image.setAttribute('src',imageUrl);
+                    image.setAttribute('onerror',"this.src = 'image_not_found.png'");
+                    image.setAttribute('class','series-image');
+                    show.appendChild(image);
+
+                    getTime(res.results[i].id, i);
                 }
               }
             });
-
             xhr.open("GET", nameApiUrl);
-
             xhr.send(data);
         }
-
     </script>
 
 </html>
