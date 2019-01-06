@@ -63,7 +63,6 @@
             {
                 font: 700 24px/28px 'Lato', Helvetica, Arial, sans-serif;
                 text-align: center;
-                color: #000;
             }
 
             .series-overview
@@ -77,6 +76,11 @@
                 font: 400 20px/22px 'Lato', Helvetica, Arial, sans-serif;
                 margin-bottom: 15px;
                 color: #496074;
+            }
+
+            .meta span
+            {
+                color: #000;
             }
 
             .show
@@ -173,8 +177,8 @@
                     hours_required = Math.ceil(avg_episode_run_time * no_of_episodes / 60);
                     console.log(hours_required);
 
-                    meta.innerHTML = "Time: <span class='text-offset'>" + hours_required + "</span> Hrs"
-                                    + "<br>Votes: <span class='text-offset'>" + vote_avg + "</span> (" + vote_count + ")";
+                    meta.innerHTML = "Time: <span> <span class='text-offset'>" + hours_required + "</span> Hrs </span>"
+                                    + "<br>Votes: <span> <span class='text-offset'>" + vote_avg + "</span> (" + vote_count + ") </span>";
               }
             });
 
