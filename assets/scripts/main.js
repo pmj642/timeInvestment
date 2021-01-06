@@ -20,8 +20,10 @@ function getTime(id, i) {
             avg_episode_run_time /= episode_run_time.length;
             hours_required = Math.ceil(avg_episode_run_time * no_of_episodes / 60);
 
-            meta.innerHTML = "Time: <span> <span class='text-offset'>" + hours_required + "</span> Hrs </span>"
-                + "<br>Votes: <span> <span class='text-offset'>" + vote_avg + "</span> (" + vote_count + ") </span>";
+            meta.innerHTML = "Time: <span> <span class='text-offset'>"
+                + hours_required + "</span> Hrs </span>"
+                + "<br>Votes: <span> <span class='text-offset'>"
+                + vote_avg + "</span> (" + vote_count + ") </span>";
     });
 }
 
