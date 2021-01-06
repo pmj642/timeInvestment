@@ -72,13 +72,14 @@ input:required {
 	margin-bottom: 10px;
 }
 
+.image-container {
+    display: inline-block;
+    width: 30%;
+}
+
 .series-image
 {
-	display: inline-block;
-	width: 25%;
-	height: inherit;
-	min-height: 310px;
-	border: 2px solid #000;
+	width: 100%;
 	vertical-align: middle;
 }
 
@@ -86,7 +87,7 @@ input:required {
 {
 	display: inline-block;
 	width: 70%;
-	margin-right: 20px;
+    padding: 1.5rem;
 	text-align: left;
 	color: #000;
 	vertical-align: top;
@@ -120,7 +121,6 @@ input:required {
 {
     display: block;
     margin: 0 auto 30px;
-   padding: 30px;
     text-align: center;
     border: 1px solid #ddd;
 }
